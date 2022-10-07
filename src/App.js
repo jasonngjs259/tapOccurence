@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Circle from "./Circle";
+import { CIRCLE_DATA, TAP_LOCATION_ARRAY } from "./constant";
+import generateNode from "./Utils";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [getOccurence, setOccurence] = useState(0);
+    const [tapArray, setTapArray] = useState([]);
+    const [visited, setVisited] = useState(generateNode());
+
+    useEffect(() => {
+        const tempArray = [];
+
+        for (let i = 0; i < visited.length; i++) {
+            tempArray.push({
+                ...CIRCLE_DATA,
+                id: i,
+                position: TAP_LOCATION_ARRAY[visited[i]],
+            });
+        }
+
+        setTapArray(tempArray);
+    }, [visited]);
+
+    // console.log(tapArray);
+    // console.log(visited);
+
+    return (
+        <>
+            {tapArray.map((element, i) => (
+                <Circle
+                    element={element}
+                    key={`circle${i}`}
+                    getOccurence={getOccurence}
+                    setOccurence={setOccurence}
+                    setTapArray={setTapArray}
+                    setVisited={setVisited}
+                />
+            ))}
+        </>
+    );
+};
 
 export default App;
