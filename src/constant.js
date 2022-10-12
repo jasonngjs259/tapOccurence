@@ -26,5 +26,4 @@ export const CIRCLE_DATA = {
         top: 0,
         left: 0,
     },
-    isCompleted: false,
 };

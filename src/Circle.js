@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
 import { CONSTANT_VALUE } from "./constant";
-import generateNode from "./Utils";
 
 const Circle = ({
     element,
     getOccurence,
     setOccurence,
+    completedArray,
+    setCompletedArray,
     setTapArray,
     setVisited,
 }) => {
     const [circleData, setCircleData] = useState(element);
+
     useEffect(() => {
         if (circleData.id === getOccurence) {
             setCircleData((prev) => ({
                 ...prev,
                 isPlayAnimation: true,
             }));
-        }
 
-        setTimeout(() => {
-            setOccurence(getOccurence + 1);
-        }, (CONSTANT_VALUE.occurenceDuration * 1000) / CONSTANT_VALUE.occurence);
-
-        if (circleData.id === getOccurence) {
             setTimeout(() => {
                 setCircleData((prev) => ({
                     ...prev,
@@ -31,33 +27,54 @@ const Circle = ({
                 }));
             }, CONSTANT_VALUE.tapAnimationDuration * 1000);
         }
+
+        setTimeout(() => {
+            if (getOccurence < CONSTANT_VALUE.occurence) {
+                setOccurence(getOccurence + 1);
+            }
+        }, (CONSTANT_VALUE.occurenceDuration * 1000) / CONSTANT_VALUE.occurence);
     }, [getOccurence, circleData.id, setOccurence]);
 
     // useEffect(() => {
-    //     setTimeout(() => {
-    //         setCircleData((prev) => ({
-    //             ...prev,
-    //             isShowMissText: false,
-    //         }));
-    //     });
-    // }, [circleData.isShowMissText]);
+    //     if (circleData.id === getOccurence) {
+    //         setTimeout(() => {
+    //             setCircleData((prev) => ({
+    //                 ...prev,
+    //                 isShowMissText: true,
+    //                 isPlayAnimation: false,
+    //             }));
+    //         }, CONSTANT_VALUE.tapAnimationDuration * 1000);
+    //     }
+    // }, [circleData.isPlayAnimation]);
 
     useEffect(() => {
-        if (
-            getOccurence === CONSTANT_VALUE.occurence &&
-            circleData.isCompleted
-        ) {
-            setOccurence(0);
-            setTapArray([]);
-            setVisited(generateNode());
-        }
-    }, [
-        getOccurence,
-        circleData.isCompleted,
-        setOccurence,
-        setVisited,
-        setTapArray,
-    ]);
+        const tempArray = [...completedArray];
+        tempArray.push("Completed");
+
+        setTimeout(() => {
+            setCircleData((prev) => ({
+                ...prev,
+                isShowMissText: false,
+            }));
+            setCompletedArray(tempArray);
+        }, 1000);
+
+        // setTimeout(() => {
+        //     setCompletedArray(tempArray);
+        // }, 1000);
+    }, [circleData.isShowMissText, completedArray]);
+
+    // console.log(completedArray);
+
+    // useEffect(() => {
+    //     if (
+    //         circleData.id === CONSTANT_VALUE.occurence - 1 &&
+    //         circleData.isCompleted
+    //     ) {
+    //
+    //         setIsCompleted(true);
+    //     }
+    // }, [circleData.id, circleData.isCompleted, setIsCompleted]);
 
     // useEffect(() => {
     //     setInterval(() => {
@@ -73,8 +90,10 @@ const Circle = ({
     // console.log(isShowCircle);
 
     const handleClick = () => {
-        setOccurence((prev) => prev + 1);
+        setCircleData((prev) => ({ ...prev, targetHitText: "Perfect" }));
     };
+
+    console.log(getOccurence);
 
     return (
         <>
